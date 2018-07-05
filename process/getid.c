@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<unistd.h>
 #include<sys/types.h>
+#include<sys/wait.h>
 
 
 //이 함수는 프로세스상에서 delay를 한다.
@@ -18,6 +19,7 @@
 
 int main(void)
 {
+	int status;
 	pid_t pid;
 	
 	//자신의 PID값을 확인한다.
@@ -45,6 +47,9 @@ int main(void)
 		printf("Parent: hi!!\n");
 		printf("Child PID : %d\n",pid);
 	}
+
+	pid = wait(&status);
+	printf("EXIT:Child pid=%d\n",pid);
 
 	//sleep(10);
 	//delay_func(10000);
