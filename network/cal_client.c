@@ -46,24 +46,21 @@ int main(int argc,char *argv[])
 	}
 	
 	// 4. Data transfer
-	//str_len = read(sock,message,sizeof(message)-1);//메세지가 수신 안되면 여기서 blocking 되어있다.
 
 
 	printf("operation Count: ");
-	scanf("%d",&cnt);
-	cal.cnt=cnt;
+	scanf("%c",&cal.operandCount);
+	cnt=atoi(&cal.operandCount);
 	for(i=0;i<cnt;i++)
 	{
 		printf("operand%d:",i+1);
 		scanf("%d",&cal.operand[i]);
-		//cal.operand[i]=operand;
 		
 		if(i==cnt-1)
 		{
 			printf("operation:");
 			scanf("%c",&cal.operation);
 			scanf("%c",&cal.operation);
-			//cal.operation=operation;
 		}
 	}
 

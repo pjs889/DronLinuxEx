@@ -57,7 +57,6 @@ int main(int argc,char *argv[])
 	clnt_sock=accept(serv_sock,(struct sockaddr*)&clnt_addr,&clnt_addr_size);
 	if(clnt_sock==-1)
 		error_handling("accept() error");
-	//write(clnt_sock,message,sizeof(message));
 	str_len=read(clnt_sock,&cal,sizeof(cal));
 	if(str_len==-1)
 	{
@@ -67,7 +66,7 @@ int main(int argc,char *argv[])
 	switch(cal.operation)
 	{
 	case '+':
-		cnt=cal.cnt;
+		cnt=atoi(&cal.operandCount);
 		for(i=0;i<cnt;i++)
 		{
 			sum=sum+cal.operand[i];
@@ -75,7 +74,7 @@ int main(int argc,char *argv[])
 		printf("sum=%d\n",sum);
 		break;
 	case '-':
-		cnt=cal.cnt;
+		cnt=atoi(&cal.operandCount);
 		sum=cal.operand[0];
 		for(i=0;i<cnt-1;i++)
 		{
@@ -84,7 +83,7 @@ int main(int argc,char *argv[])
 		printf("sum=%d\n",sum);
 		break;
 	case '*':
-		cnt=cal.cnt;
+		cnt=atoi(&cal.operandCount);
 		sum=cal.operand[0];
 		for(i=0;i<cnt-1;i++)
 		{
@@ -94,40 +93,6 @@ int main(int argc,char *argv[])
 		break;
 	}
 	
-	
-	/*if(cal.operation=='+');
-	{
-		cnt=cal.cnt;
-		for(i=0;i<cnt;i++)
-		{
-			sum=sum+cal.operand[i];
-		}
-		printf("sum=%d\n",sum);
-	}
-	
-	if(cal.operation=='-')
-	{
-		cnt=cal.cnt;
-		sum=cal.operand[0];
-		for(i=0;i<cnt-1;i++)
-		{
-			sum=sum-cal.operand[i+1];
-			
-		}
-		printf("sun=%d\n",sum);
-	}
-*/
-
-
-
-
-
-	//ipaddr=inet_ntoa(clnt_addr.sin_addr);//주소값을 받아서 문자열로 리
-//	턴
-	//printf("client to addr : %s\n",ipaddr);   
-	
-
-
 
 	close(clnt_sock);
 	close(serv_sock);
