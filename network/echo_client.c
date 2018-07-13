@@ -40,18 +40,27 @@ int main(int argc,char *argv[])
 	{
 		error_handling("connet() error");
 	}
-	
-	// 4. Data transfer
-	str_len = read(sock,message,sizeof(message)-1);//메세지가 수신 안되면 여기서 blocking 되어있다.
-	if(str_len==-1)
+	else
+		printf("Connected....\n");
+	while(1)
 	{
-		error_handling("read() error");
-	}
-	
-	printf("Message from server : %s\n", message);
+		printf("Input message(Q to quit):");
+		fgets(message,sizeof(message),stdin);
 
+		if(!strcmp(message,"q\n") || !strcmp(message,"Q\n"))
+			break; //"q\n"한 이유는 fgets가 엔터키까지 먹기때문
+
+		write(sock,message,strlen(message));//sizeof로 하면 엔터키가 들어가 문자가 깨짐
+		str_len=read(sock,message,sizeof(message)-1);
+		message[str_len]=0;	//NULL문자 삽입
+		if(str_len==-1)
+		{
+			error_handling("read() error");
+		}	
+	
+		printf("Message from server : %s\n", message);
+	}
 	// 5.close()
-	//shutdown(sock,SHUT_WR);
 	close(sock);
 
 	return 0;

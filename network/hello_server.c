@@ -5,6 +5,10 @@
 #include<arpa/inet.h>
 #include<sys/socket.h>
 
+#define TRUE 1
+#define FALSE 0
+
+
 // ./hello_server [PORT]
 void error_handling(char *message);
 
@@ -13,10 +17,12 @@ int main(int argc,char *argv[])
 {
 	int serv_sock;
 	int clnt_sock;
+	int option;
 
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in clnt_addr;
 	socklen_t clnt_addr_size;
+	socklen_t optlen;
 
 	char message[]="Hello world!";
 	char *ipaddr;
@@ -38,6 +44,10 @@ int main(int argc,char *argv[])
 	serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);  //IP 설정
 	serv_addr.sin_port=htons(atoi(argv[1]));      //PORT 설정
 
+	optlen=sizeof(option);
+	option=TRUE;
+	setsockopt(serv_sock,SOL_SOCKET,SO_REUSEADDR,&option,optlen);
+
 	// 3.서버의 주소값을 bind한다.
 	if(bind(serv_sock, (struct sockaddr*) &serv_addr,sizeof(serv_addr))==-1)
 		error_handling("bind() error");
@@ -52,15 +62,14 @@ int main(int argc,char *argv[])
 	if(clnt_sock==-1)
 		error_handling("accept() error");
 	write(clnt_sock,message,sizeof(message));
+	shutdown(clnt_sock,SHUT_WR);
 
 	ipaddr=inet_ntoa(clnt_addr.sin_addr);//주소값을 받아서 문자열로 리
 //	턴
 	printf("client to addr : %s\n",ipaddr);
+	while(read(clnt_sock,message,sizeof(message))!=0);
 
-
-
-
-	close(clnt_sock);
+	//close(clnt_sock);
 	close(serv_sock);
 
 	return 0;
